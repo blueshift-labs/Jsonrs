@@ -28,4 +28,4 @@ jsonrs-*.tar
 
 native/jsonrs/target/
 
-checksum-*.exs
+# checksum-*.exs

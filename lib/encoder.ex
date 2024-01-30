@@ -67,6 +67,8 @@ defimpl Jsonrs.Encoder, for: Map do
 end
 
 defimpl Jsonrs.Encoder, for: List do
+  def encode([]), do: []
+
   def encode(list) do
     cond do
       Keyword.keyword?(list) ->
