@@ -6,7 +6,8 @@ defmodule Jsonrs do
   source_url = Mix.Project.config()[:source_url]
   version = Mix.Project.config()[:version]
 
-  use RustlerPrecompiled, otp_app: :jsonrs,
+  use RustlerPrecompiled,
+    otp_app: :jsonrs,
     base_url: "#{source_url}/releases/download/v#{version}",
     force_build: System.get_env("FORCE_JSONRS_BUILD") in ["1", "true"],
     targets: RustlerPrecompiled.Config.default_targets(),
@@ -78,6 +79,7 @@ defmodule Jsonrs do
     {compression, _opts} = Keyword.pop(opts, :compress, :none)
     compression = validate_compression(compression)
     indent = if true == indent, do: 2, else: indent
+
     case lean do
       true -> input
       false -> Jsonrs.Encoder.encode(input)

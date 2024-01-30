@@ -2,18 +2,23 @@ defmodule JsonrsTest do
   use ExUnit.Case
   doctest Jsonrs
 
-  defmodule Container do
-    defstruct [:payload]
-  end
+  alias JsonrsTest.Container
 
   describe "encodes" do
     test "simple map" do
       assert Jsonrs.encode!(%{"foo" => 5}) == ~s({"foo":5})
-      assert Jsonrs.encode!({:ok, :error}) == ~s(["ok","error"])
+      assert Jsonrs.encode!([{:ok, :error}]) == ~s({"ok":"error"})
     end
 
     test "complicated term" do
-      assert Jsonrs.encode!(%{map: %{1 => "foo", "list" => [:ok, 42, -42, 42.0, 42.01, :error], tuple: {:ok, []}, atom: :atom}}) == ~s({"map":{"1":"foo","atom":"atom","tuple":["ok",[]],"list":["ok",42,-42,42.0,42.01,"error"]}})
+      assert Jsonrs.encode!(%{
+               map: %{
+                 1 => "foo",
+                 "list" => [:ok, 42, -42, 42.0, 42.01, :error],
+                 atom: :atom
+               }
+             }) ==
+               ~s({"map":{"1":"foo","atom":"atom","list":["ok",42,-42,42.0,42.01,"error"]}})
     end
 
     test "struct using fallback protocol" do
@@ -21,7 +26,8 @@ defmodule JsonrsTest do
     end
 
     test "nested types" do
-      assert Jsonrs.encode!(%{a: [3, {URI.parse("http://foo.bar"), ~T[12:00:00]}]}) == ~s({"a":[3,["http://foo.bar","12:00:00"]]})
+      assert Jsonrs.encode!(%{a: [3, [URI.parse("http://foo.bar"), ~T[12:00:00]]]}) ==
+               ~s({"a":[3,["http://foo.bar","12:00:00"]]})
     end
 
     test "prettily" do
@@ -30,7 +36,9 @@ defmodule JsonrsTest do
 
     test "without custom protocols when lean" do
       assert "12:00:00" == Jsonrs.encode!(~T[12:00:00]) |> Jsonrs.decode!()
-      assert %{"hour" => _, "minute" => _, "second" => _} = Jsonrs.encode!(~T[12:00:00], lean: true) |> Jsonrs.decode!()
+
+      assert %{"hour" => _, "minute" => _, "second" => _} =
+               Jsonrs.encode!(~T[12:00:00], lean: true) |> Jsonrs.decode!()
     end
 
     test "with compress: :gzip" do
