@@ -138,9 +138,9 @@ jobs:
         name: ${{ steps.rename.outputs.LIB_FINAL_NAME }}
         path: ${{ steps.rename.outputs.LIB_FINAL_PATH }}
 
-    - name: Publish archives and packages
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          ${{ steps.rename.outputs.LIB_FINAL_PATH }}
-      if: startsWith(github.ref, 'refs/tags/')
+    # - name: Publish archives and packages
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     files: |
+    #       ${{ steps.rename.outputs.LIB_FINAL_PATH }}
+    #   if: startsWith(github.ref, 'refs/tags/')
