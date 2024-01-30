@@ -1,7 +1,7 @@
 defmodule Jsonrs.MixProject do
   use Mix.Project
 
-  @version "0.3.6"
+  @version "0.3.4"
 
   def project do
     [
